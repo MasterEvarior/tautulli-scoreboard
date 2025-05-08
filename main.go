@@ -18,7 +18,14 @@ func main() {
 	BASE_URL := getEnvVar("TS_BASE_URL")
 
 	tautulliClient := NewClient(BASE_URL, API_TOKEN)
-	users, _ := tautulliClient.GetUsers()
+	users, err := tautulliClient.GetUsers()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	println(users)
+	for _, u := range users {
+		println(u.UserId)
+		println(u.Username)
+		println(u.FriendlyName)
+	}
 }

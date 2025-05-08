@@ -2,6 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -11,16 +14,18 @@ type TautulliApiClient struct {
 	http     *http.Client
 }
 
-type APIResponse struct {
+type APIResponse[T User | WatchTime] struct {
 	Response struct {
-		Result string          `json:"result"`
-		Data   json.RawMessage `json:"data"`
+		Result  string `json:"result"`
+		Message string `json:"message"`
+		Data    []T    `json:"data"`
 	} `json:"response"`
 }
 
 type User struct {
-	UserId   string `json:"user_id"`
-	Username string `json:"username"`
+	UserId       int    `json:"user_id"`
+	Username     string `json:"username"`
+	FriendlyName string `json:"friendly_name"`
 }
 
 type WatchTime struct {
@@ -42,23 +47,26 @@ func (c *TautulliApiClient) GetUsers() ([]User, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer data.Close()
 
-	var users []User
-	if err := json.Unmarshal(data, &users); err != nil {
+	var users APIResponse[User]
+	if err := json.NewDecoder(data).Decode(&users); err != nil {
 		return nil, err
 	}
+	if users.Response.Result != "success" {
+		errorMessage := fmt.Sprintf("Could not successfully fetch users, returned result was: %s %s", users.Response.Result, users.Response.Message)
+		return nil, errors.New(errorMessage)
+	}
 
-	return users, nil
+	return users.Response.Data, nil
 }
 
 func getStats() {
 
 }
 
-func (c *TautulliApiClient) doRequest(command string, arguments []string) (json.RawMessage, error) {
+func (c *TautulliApiClient) doRequest(command string, arguments []string) (io.ReadCloser, error) {
 	url := c.baseUrl + "/api/v2?apikey=" + c.apiToken + "&cmd=" + command
-
-	println(url)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -73,12 +81,7 @@ func (c *TautulliApiClient) doRequest(command string, arguments []string) (json.
 		return nil, err
 	}
 
-	var apiResponse APIResponse
-	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
-		return nil, err
-	}
-
-	return apiResponse.Response.Data, nil
+	return resp.Body, nil
 }
 
 func (c *TautulliApiClient) formatArguments(arguments []string) string {
