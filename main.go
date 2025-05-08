@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func GetEnvVar(name string) string {
+func getEnvVar(name string) string {
 	value, ok := os.LookupEnv(name)
 	if !ok {
 		log.Fatalf("Environment variable '%s' was not defined", name)
@@ -13,14 +13,12 @@ func GetEnvVar(name string) string {
 	return value
 }
 
-func GetEnvVarWithDefault(name string, defaultValue string) string {
-	value, ok := os.LookupEnv(name)
-	if !ok {
-		return defaultValue
-	}
-	return value
-}
-
 func main() {
-	println("Hello World")
+	API_TOKEN := getEnvVar("TS_API_TOKEN")
+	BASE_URL := getEnvVar("TS_BASE_URL")
+
+	tautulliClient := NewClient(BASE_URL, API_TOKEN)
+	users, _ := tautulliClient.GetUsers()
+
+	println(users)
 }
