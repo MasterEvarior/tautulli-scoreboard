@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io"
+	"encoding/json"
 	"net/http"
 )
 
@@ -9,6 +9,13 @@ type TautulliApiClient struct {
 	baseUrl  string
 	apiToken string
 	http     *http.Client
+}
+
+type APIResponse struct {
+	Response struct {
+		Result string          `json:"result"`
+		Data   json.RawMessage `json:"data"`
+	} `json:"response"`
 }
 
 type User struct {
@@ -31,31 +38,27 @@ func NewClient(baseUrl string, apiToken string) *TautulliApiClient {
 }
 
 func (c *TautulliApiClient) GetUsers() ([]User, error) {
-	body, err := c.doRequest("get_users", nil)
+	data, err := c.doRequest("get_users", nil)
 	if err != nil {
 		return nil, err
 	}
-	defer body.Close()
 
-	bodyBytes, err := io.ReadAll(body)
-	println(string(bodyBytes))
+	var users []User
+	if err := json.Unmarshal(data, &users); err != nil {
+		return nil, err
+	}
 
-	/*
-		var users []User
-		if err := json.NewDecoder(body).Decode(&users); err != nil {
-			log.Printf("Could not unmarshal Tautulli users: %v", err)
-			return nil, err
-		}*/
-
-	return nil, nil
+	return users, nil
 }
 
 func getStats() {
 
 }
 
-func (c *TautulliApiClient) doRequest(command string, arguments []string) (io.ReadCloser, error) {
+func (c *TautulliApiClient) doRequest(command string, arguments []string) (json.RawMessage, error) {
 	url := c.baseUrl + "/api/v2?apikey=" + c.apiToken + "&cmd=" + command
+
+	println(url)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -70,7 +73,12 @@ func (c *TautulliApiClient) doRequest(command string, arguments []string) (io.Re
 		return nil, err
 	}
 
-	return resp.Body, nil
+	var apiResponse APIResponse
+	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
+		return nil, err
+	}
+
+	return apiResponse.Response.Data, nil
 }
 
 func (c *TautulliApiClient) formatArguments(arguments []string) string {
