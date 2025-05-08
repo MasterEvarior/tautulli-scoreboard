@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Plex Watch Scoreboard</title>
+  </head>
+  <body>
+    <h1>Watch Time Scoreboard</h1>
+
+    <form>
+      <label for="timeframe">Timeframe:</label>
+      <select id="timeframe" name="timeframe">
+        <option value="1">Today</option>
+        <option value="7">Last week</option>
+        <option value="30">Last month</option>
+        <option value="365">Last year</option>
+      </select>
+
+      <button type="button">Refresh</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th>Hours Watched</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Alice</td>
+          <td>23.4</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Bob</td>
+          <td>17.1</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Charlie</td>
+          <td>12.5</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 type TautulliApiClient struct {
@@ -32,6 +33,11 @@ type WatchTime struct {
 	QueryDays  int `json:"query_days"`
 	TotalPlays int `json:"total_plays"`
 	TotalTime  int `json:"total_time"`
+}
+
+type queryArgument struct {
+	Name  string
+	Value string
 }
 
 func NewClient(baseUrl string, apiToken string) *TautulliApiClient {
@@ -61,12 +67,31 @@ func (c *TautulliApiClient) GetUsers() ([]User, error) {
 	return users.Response.Data, nil
 }
 
-func getStats() {
+func (c *TautulliApiClient) GetStats(userId int, timeframe int) (WatchTime, error) {
+	queryArgs := []queryArgument{
+		{Name: "user_id", Value: fmt.Sprint(userId)},
+		{Name: "query_days", Value: fmt.Sprint(timeframe)},
+	}
+	data, err := c.doRequest("get_user_watch_time_stats", queryArgs)
+	if err != nil {
+		return WatchTime{}, err
+	}
+	defer data.Close()
 
+	var watchTime APIResponse[WatchTime]
+	if err := json.NewDecoder(data).Decode(&watchTime); err != nil {
+		return WatchTime{}, err
+	}
+	if watchTime.Response.Result != "success" {
+		errorMessage := fmt.Sprintf("Could not successfully fetch watch time for user %d, returned result was: %s %s", userId, watchTime.Response.Result, watchTime.Response.Message)
+		return WatchTime{}, errors.New(errorMessage)
+	}
+
+	return watchTime.Response.Data[0], nil
 }
 
-func (c *TautulliApiClient) doRequest(command string, arguments []string) (io.ReadCloser, error) {
-	url := c.baseUrl + "/api/v2?apikey=" + c.apiToken + "&cmd=" + command
+func (c *TautulliApiClient) doRequest(command string, queryArgs []queryArgument) (io.ReadCloser, error) {
+	url := c.baseUrl + "/api/v2?apikey=" + c.apiToken + "&cmd=" + command + c.formatArguments(queryArgs)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -84,10 +109,14 @@ func (c *TautulliApiClient) doRequest(command string, arguments []string) (io.Re
 	return resp.Body, nil
 }
 
-func (c *TautulliApiClient) formatArguments(arguments []string) string {
-	if arguments == nil || len(arguments) == 0 {
+func (c *TautulliApiClient) formatArguments(arguments []queryArgument) string {
+	if len(arguments) == 0 {
 		return ""
 	}
 
-	return ""
+	var parsedArgs string = ""
+	for _, arg := range arguments {
+		parsedArgs += "&" + url.QueryEscape(arg.Name) + "=" + url.QueryEscape(arg.Value)
+	}
+	return parsedArgs
 }
