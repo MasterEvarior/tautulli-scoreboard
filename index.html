@@ -2,48 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Plex Watch Scoreboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Watch Time Scoreboard</title>
+    <style>
+      body {
+        background: #121212;
+        color: white;
+        font-family: "Roboto", sans-serif;
+        flex-direction: row;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      main {
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        div {
+          background: #222222;
+          border-radius: 12px;
+          padding: 1rem 1.5rem;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          transition: transform 0.2s ease;
+          position: relative;
+        }
+      }
+
+      main div {
+        border: 1px solid;
+        border-radius: 2px;
+        margin-bottom: 0.25em;
+        width: 50%;
+      }
+
+      main div:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+      }
+    </style>
   </head>
   <body>
-    <h1>Watch Time Scoreboard</h1>
-
-    <form>
-      <label for="timeframe">Timeframe:</label>
-      <select id="timeframe" name="timeframe">
-        <option value="1">Today</option>
-        <option value="7">Last week</option>
-        <option value="30">Last month</option>
-        <option value="365">Last year</option>
-      </select>
-
-      <button type="button">Refresh</button>
-    </form>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>User</th>
-          <th>Hours Watched</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Alice</td>
-          <td>23.4</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Bob</td>
-          <td>17.1</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Charlie</td>
-          <td>12.5</td>
-        </tr>
-      </tbody>
-    </table>
+    <header>
+      <h1>Watch Time Scoreboard</h1>
+    </header>
+    <main>
+      <div><span>Hans</span> | <span>12.5h</span></div>
+      <div><span>Peter</span> | <span>6.5h</span></div>
+      <div><span>Fridolin</span> | <span>0.5h</span></div>
+    </main>
+    <footer>
+      <span>Made with ❤️</span>
+    </footer>
   </body>
 </html>

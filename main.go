@@ -24,20 +24,32 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	tautulliClient := NewClient(BASE_URL, API_TOKEN)
 	users, err := tautulliClient.GetUsers()
 	if err != nil {
+		log.Printf("Could not users because of an error: %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
 	log.Printf("Fetched %d users", len(users))
 
+	var scoreboard []WatchTime
 	for _, user := range users {
-		watchTime, _ := tautulliClient.GetStats(user.UserId, 7)
-		println(user.FriendlyName)
-		println(watchTime.QueryDays)
-		println(watchTime.TotalPlays)
-		println(watchTime.TotalTime)
-		println("----------------------")
+		watchTime, err := tautulliClient.GetStats(user.UserId, 7)
+		if err != nil {
+			log.Printf("Could not fetch status for user %s because of an error: %v", user.FriendlyName, err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		if watchTime.TotalTime > 0 {
+			scoreboard = append(scoreboard, watchTime)
+			log.Printf("Added %s to the scoreboard", user.FriendlyName)
+			continue
+		}
+
+		log.Printf("Not adding %s to the scoreboard, because the watchtime was 0 or less", user.FriendlyName)
 	}
 
+	log.Printf("Fetched %d watch times for the scoreboard", len(scoreboard))
 }
 
 func getEnvVar(name string) string {
