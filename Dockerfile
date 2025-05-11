@@ -5,7 +5,7 @@ COPY go.mod ./
 RUN go mod download
 
 COPY *.go ./
-COPY ./cmd ./cmd
+COPY *.html ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/tautulli-scoreboard
 
