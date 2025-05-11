@@ -2,7 +2,7 @@
 
 ![quality workflow](https://github.com/MasterEvarior/tautulli-scoreboard/actions/workflows/quality.yaml/badge.svg) ![release workflow](https://github.com/MasterEvarior/tautulli-scoreboard/actions/workflows/publish.yaml/badge.svg)
 
-TODO
+Small project to display a scoreboard for your [Tautulli](https://tautulli.com/) users. See screenshots.
 
 ## Screenshots
 
