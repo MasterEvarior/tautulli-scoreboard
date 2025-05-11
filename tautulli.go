@@ -114,7 +114,7 @@ func (c *TautulliApiClient) formatArguments(arguments []queryArgument) string {
 		return ""
 	}
 
-	var parsedArgs string = ""
+	var parsedArgs = ""
 	for _, arg := range arguments {
 		parsedArgs += "&" + url.QueryEscape(arg.Name) + "=" + url.QueryEscape(arg.Value)
 	}

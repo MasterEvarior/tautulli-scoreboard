@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"slices"
 	"sort"
+	"strconv"
 	"text/template"
 
 	_ "embed"
@@ -87,11 +88,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func getTimeframe(r *http.Request) int {
 	allowedTimeframes := []int{1, 7, 30, 365}
 
-	if slices.Contains(allowedTimeframes, 7) {
+	timeframe, err := strconv.Atoi(r.URL.Query().Get("timeframe"))
+	if err != nil || !slices.Contains(allowedTimeframes, timeframe) {
 		return 7
 	}
 
-	return 7
+	return timeframe
 }
 
 func toHours(seconds int) float64 {

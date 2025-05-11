@@ -14,6 +14,7 @@
         --background-color: #121212;
         --font-color: white;
         --lighter-background-color: #222222;
+        --highlight-color: #ffd700;
         --box-shadow-color: rgba(0, 0, 0, 0.3);
       }
 
@@ -30,6 +31,36 @@
         overflow: hidden;
       }
 
+      header {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        /* Header */
+        .day-selector {
+          display: flex;
+          gap: 0.25rem;
+
+          button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--lighter-background-color);
+            color: var(--font-color);
+            font-size: 1rem;
+            cursor: pointer;
+          }
+
+          button:hover,
+          button.active {
+            background-color: var(--highlight-color);
+            font-weight: bold;
+            color: black;
+          }
+        }
+      }
+
+      /* Main */
       main {
         width: 100%;
         max-width: 800px;
@@ -57,7 +88,7 @@
 
         /* Special stiling for the first place*/
         div:first-child {
-          background: linear-gradient(135deg, #ffd700, #fae268);
+          background: linear-gradient(135deg, var(--highlight-color), #fae268);
           color: black;
           font-weight: bold;
           animation: pulse 1.5s infinite;
@@ -84,23 +115,28 @@
           transform: scale(1);
         }
       }
-
-      @keyframes flip {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: translateY(100%);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
     </style>
+    <script>
+      setTimeframe = (button) => {
+        document
+          .querySelectorAll(".day-selector button")
+          .forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const currentUrl = window.location.href;
+        console.log(currentUrl);
+      };
+    </script>
   </head>
   <body>
     <header>
       <h1>{{ .Title }}</h1>
+      <div class="day-selector">
+        <button onclick="setTimeframe(this)">1</button>
+        <button class="active" onclick="setTimeframe(this)">7</button>
+        <button onclick="setTimeframe(this)">30</button>
+        <button onclick="setTimeframe(this)">365</button>
+      </div>
     </header>
     <main>
       {{ range .Users }}
