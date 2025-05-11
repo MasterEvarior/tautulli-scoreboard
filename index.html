@@ -67,8 +67,8 @@
           content: "👑";
           position: absolute;
           bottom: 60%;
-          left: 94%;
-          font-size: 2rem;
+          left: 95%;
+          font-size: 2.1rem;
           transform: rotate(35deg);
         }
       }
@@ -104,7 +104,10 @@
     </header>
     <main>
       {{ range .Users }}
-      <div><span>{{ .Name }}</span> <span>{{ .WatchTime }}</span></div>
+      <div>
+        <span>{{ .Name }}</span>
+        <span>{{ printf "%.2f" .WatchTime }}h ({{ .Plays }} Plays)</span>
+      </div>
       {{ end }}
     </main>
     <footer>
