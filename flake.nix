@@ -32,8 +32,10 @@
         '';
 
         # Environment Variables
-        TS_BASE_URL = "";
-        TS_API_TOKEN = "";
+        TS_BASE_URL = "https://tautulli.yourdomain.com";
+        TS_API_TOKEN = "123";
+        TS_TITLE = "Watch Time Scoreboard (dev)";
+        TS_FOOTER = "Made with ❤️ (dev)";
       };
     };
 }

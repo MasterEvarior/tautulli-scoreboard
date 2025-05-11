@@ -118,24 +118,43 @@
     </style>
     <script>
       setTimeframe = (button) => {
+        // This is technically not necessary but makes the input feel instant
         document
           .querySelectorAll(".day-selector button")
           .forEach((btn) => btn.classList.remove("active"));
         button.classList.add("active");
 
-        const currentUrl = window.location.href;
-        console.log(currentUrl);
+        // This is the actual logic
+        const value = button.getAttribute("data-value");
+        const url = new URL(window.location);
+        url.searchParams.set("timeframe", value);
+
+        window.location = url;
       };
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const url = new URL(window.location);
+        const timeframe = url.searchParams.get("timeframe") || "7";
+        const buttons = document.querySelectorAll(".day-selector button");
+
+        buttons.forEach((btn) => {
+          if (btn.getAttribute("data-value") === timeframe) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      });
     </script>
   </head>
   <body>
     <header>
       <h1>{{ .Title }}</h1>
       <div class="day-selector">
-        <button onclick="setTimeframe(this)">1</button>
-        <button class="active" onclick="setTimeframe(this)">7</button>
-        <button onclick="setTimeframe(this)">30</button>
-        <button onclick="setTimeframe(this)">365</button>
+        <button data-value="1" onclick="setTimeframe(this)">1 Day</button>
+        <button data-value="7" onclick="setTimeframe(this)">7 Days</button>
+        <button data-value="30" onclick="setTimeframe(this)">30 Days</button>
+        <button data-value="365" onclick="setTimeframe(this)">365 Days</button>
       </div>
     </header>
     <main>
