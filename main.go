@@ -4,6 +4,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
+
+	_ "embed"
 )
 
 func main() {
@@ -15,6 +18,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not start the server because of the following issue: %v", err)
 	}
+}
+
+//go:embed index.html
+var indexTemplate string
+
+type templateData struct {
+	Title  string
+	Footer string
+	Users  []templateDataUser
+}
+
+type templateDataUser struct {
+	Name      string
+	WatchTime float64
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +67,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("Fetched %d watch times for the scoreboard", len(scoreboard))
+
+	tmpl := template.Must(template.New("index").Parse(indexTemplate))
+	err = tmpl.Execute(w, getTemplateData())
+	if err != nil {
+		log.Printf("Could not render status because of an error: %v", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+}
+
+func getTemplateData() templateData {
+	TITLE := getEnvVarWithDefault("TS_TITLE", "Watch Time Scoreboard")
+	FOOTER := getEnvVarWithDefault("TS_FOOTER", "Made with ❤️")
+
+	return templateData{
+		Title:  TITLE,
+		Footer: FOOTER,
+		Users: ,
+	}
 }
 
 func getEnvVar(name string) string {

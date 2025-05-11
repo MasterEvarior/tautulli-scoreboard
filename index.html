@@ -8,11 +8,18 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <title>Watch Time Scoreboard</title>
+    <title>{{ .Title }}</title>
     <style>
+      :root {
+        --background-color: #121212;
+        --font-color: white;
+        --lighter-background-color: #222222;
+        --box-shadow-color: rgba(0, 0, 0, 0.3);
+      }
+
       body {
-        background: #121212;
-        color: white;
+        background: var(--background-color);
+        color: var(--font-color);
         font-family: "Roboto", sans-serif;
         display: flex;
         flex-direction: column;
@@ -32,10 +39,10 @@
         align-items: center;
 
         div {
-          background: #222222;
+          background: var(--lighter-background-color);
           border-radius: 12px;
           padding: 1rem 1.5rem;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px var(--box-shadow-color);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -46,7 +53,6 @@
 
         div:hover {
           transform: scale(1.02);
-          box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
         }
 
         /* Special stiling for the first place*/
@@ -78,19 +84,31 @@
           transform: scale(1);
         }
       }
+
+      @keyframes flip {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: translateY(100%);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
   <body>
     <header>
-      <h1>Watch Time Scoreboard</h1>
+      <h1>{{ .Title }}</h1>
     </header>
     <main>
-      <div><span>Hans</span> <span>12.5h</span></div>
-      <div><span>Peter</span> <span>6.5h</span></div>
-      <div><span>Fridolin</span> <span>0.5h</span></div>
+      {{ range .Users }}
+      <div><span>{{ .Name }}</span> <span>{{ .WatchTime }}</span></div>
+      {{ end }}
     </main>
     <footer>
-      <span>Made with ❤️</span>
+      <span>{{ .Footer }}</span>
     </footer>
   </body>
 </html>
