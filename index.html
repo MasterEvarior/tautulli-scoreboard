@@ -94,6 +94,7 @@
           padding: 1em 1.5em;
           box-shadow: 0 4px 10px var(--box-shadow-color);
           display: flex;
+          flex-direction: row;
           justify-content: space-between;
           align-items: center;
           transition: transform 0.2s ease;
@@ -117,9 +118,13 @@
           animation: pulse 1.75s infinite;
         }
 
+        div::after {
+          content: "🍿";
+          font-size: var(--icon-size);
+        }
+
         div:first-child::after {
           content: "👑";
-          font-size: var(--icon-size);
         }
 
         /* Styling for the second and third place */
@@ -134,7 +139,6 @@
 
         div:nth-child(2)::after {
           content: "🥈";
-          font-size: var(--icon-size);
         }
 
         div:nth-child(3) {
@@ -143,11 +147,11 @@
             var(--bronze-color),
             var(--lighter-bronze-color)
           );
+          color: black;
         }
 
         div:nth-child(3)::after {
           content: "🥉";
-          font-size: var(--icon-size);
         }
       }
 
