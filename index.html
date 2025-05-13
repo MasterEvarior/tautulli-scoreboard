@@ -14,7 +14,24 @@
         --background-color: #121212;
         --font-color: white;
         --lighter-background-color: #222222;
-        --highlight-color: #ffd700;
+        --gold-color: #ffd700;
+        --lighter-gold-color: color-mix(
+          in srgb,
+          var(--gold-color) 50%,
+          white 50%
+        );
+        --silver-color: #c0c0c0;
+        --lighter-silver-color: color-mix(
+          in srgb,
+          var(--silver-color) 50%,
+          white 50%
+        );
+        --bronze-color: #cd7f32;
+        --lighter-bronze-color: color-mix(
+          in srgb,
+          var(--bronze-color) 50%,
+          white 50%
+        );
         --box-shadow-color: rgba(0, 0, 0, 0.3);
       }
 
@@ -53,7 +70,7 @@
 
           button:hover,
           button.active {
-            background-color: var(--highlight-color);
+            background-color: var(--gold-color);
             font-weight: bold;
             color: black;
           }
@@ -79,16 +96,20 @@
           align-items: center;
           transition: transform 0.2s ease;
           position: relative;
-          width: 50%;
+          width: 50vw;
         }
 
         div:hover {
           transform: scale(1.02);
         }
 
-        /* Special stiling for the first place*/
+        /* Special styling for the first place*/
         div:first-child {
-          background: linear-gradient(135deg, var(--highlight-color), #fae268);
+          background: linear-gradient(
+            135deg,
+            var(--gold-color),
+            var(--lighter-gold-color)
+          );
           color: black;
           font-weight: bold;
           animation: pulse 1.5s infinite;
@@ -99,8 +120,36 @@
           position: absolute;
           bottom: 60%;
           left: 95%;
-          font-size: 2.1rem;
+          font-size: 2.1em;
           transform: rotate(35deg);
+        }
+
+        /* Styling for the second and third place */
+        div:nth-child(2) {
+          background: linear-gradient(
+            135deg,
+            var(--silver-color),
+            var(--lighter-silver-color)
+          );
+          color: black;
+        }
+
+        div:nth-child(2)::after {
+          content: "🥈";
+          font-size: 1.5em;
+        }
+
+        div:nth-child(3) {
+          background: linear-gradient(
+            135deg,
+            var(--bronze-color),
+            var(--lighter-bronze-color)
+          );
+        }
+
+        div:nth-child(3)::after {
+          content: "🥉";
+          font-size: 1.5em;
         }
       }
 
