@@ -24,7 +24,7 @@ jobs:
       - name: Install mdformat
         run: pipx install mdformat==0.7.18
       - name: Run treefmt
-        uses: isbecker/treefmt-action@v1
+        uses: isbecker/treefmt-action@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           version: 'latest'
